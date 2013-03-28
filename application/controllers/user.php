@@ -7,49 +7,49 @@ class User extends CI_Controller {
 		$this->load->view('signup');
 	}
 
-	public function new()
+	public function new() // create new user
 	{
 		$data["first_name"] = $this->input->post("first_name", TRUE); // TRUE = XSS filter on
 		$data["last_name"]  = $this->input->post("last_name", TRUE);
 		$data["email"]      = $this->input->post("email", TRUE);
 
-		$this->load->model("User_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("User_model");
 		$this->User_model->add($data);
 	}
 
-	public function update($user_id)
+	public function update($user_id) // update user
 	{
-		$data["user_id"] = $user_id; // get current userid
+		$data["user_id"] = $user_id;
 
-		$this->load->model("User_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("User_model");
 		$this->User_model->update($data);
 	}
 
-	public function delete($user_id)
+	public function delete($user_id) // delete user
 	{
-		$data["user_id"] = $user_id; // get current userid
+		$data["user_id"] = $user_id;
 
-		$this->load->model("User_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("User_model");
 		$this->User_model->delete($data);
 	}
 
-	public function add_friend($user_id)
+	public function add_friend($user_id) // add friendship between current user & $user_id
 	{
-		$data[] = ; // get current userid
+		$data[] = $this->session->userdata("user_id"); // get current userid
 		$data[] = $user_id; // freind userid
 		$data = $this->_sort_IDs($data);
 
-		$this->load->model("User_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("User_model");
 		$this->User_model->add_friend($data);
 	}
 
-	public function delete_friend($user_id)
+	public function delete_friend($user_id) // delete friendship between current user & $user_id
 	{
-		$data[] = ; // get current userid
+		$data[] = $this->session->userdata("user_id"); // get current userid
 		$data[] = $user_id; // friend userid
 		$data = $this->_sort_IDs($data);
 
-		$this->load->model("User_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("User_model");
 		$this->User_model->delete_friend($data);
 	}
 

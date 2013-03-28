@@ -7,46 +7,46 @@ class Group extends CI_Controller {
 		$this->load->view('signup');
 	}
 
-	public function new()
+	public function new() // create new group
 	{
 		$data["name"] = $this->input->post("name", TRUE); // TRUE = XSS filter on
-		$data["user_id"] = ; // get current userid
+		$data["user_id"] = $this->session->userdata("user_id"); // get current userid
 
-		$this->load->model("Group_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("Group_model");
 		$this->Group_model->add($data);
 	}
 
-	public function update($group_id)
+	public function update($group_id) // update group
 	{
-		$data["group_id"] = $group_id; // get current userid
+		$data["group_id"] = $group_id;
 
-		$this->load->model("Group_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("Group_model");
 		$this->Group_model->update($data);
 	}
 
-	public function join($group_id)
+	public function join($group_id) // add current user to group
 	{
-		$data["group_id"] = $group_id; // get current userid
-		$data["user_id"] = ; // get current userid
+		$data["group_id"] = $group_id;
+		$data["user_id"] = $this->session->userdata("user_id"); // get current userid
 
-		$this->load->model("Group_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("Group_model");
 		$this->Group_model->join($data);
 	}
 
-	public function leave($group_id)
+	public function leave($group_id) // remove current user from group
 	{
-		$data["group_id"] = $group_id; // get current userid
-		$data["user_id"] = ; // get current userid
+		$data["group_id"] = $group_id;
+		$data["user_id"] = $this->session->userdata("user_id"); // get current userid
 
-		$this->load->model("Group_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("Group_model");
 		$this->Group_model->leave($data);
 	}
 
-	public function delete($group_id)
+	public function delete($group_id) // delete group
 	{
-		$data["group_id"] = $group_id; // get current userid
+		$data["group_id"] = $group_id;
 
-		$this->load->model("Group_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->load->model("Group_model");
 		$this->Group_model->delete($data);
 	}
 }
