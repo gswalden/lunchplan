@@ -17,14 +17,36 @@ class Event extends CI_Controller {
 		$data["group"]      = $this->input->post("group", TRUE);		
 
 		$this->load->model("Event_model", "", TRUE); // auto-connects to db w/ TRUE
-		$this->NewEvent->add($data);
+		$this->Event_model->add($data);
 	}
 
-	public function joinEvent($event_id)
+	public function join($event_id)
 	{
-		$data["id"] = ; // Get current user_id
+		$data["user_id"] = ; // Get current user_id
 		$data["event_id"] = $event_id;
 		$this->load->model("Event_model", "", TRUE); // auto-connects to db w/ TRUE
 		$this->Event_model->join($data);
+	}
+
+	public function leave($event_id)
+	{
+		$data["user_id"] = ; // Get current user_id
+		$data["event_id"] = $event_id;
+		$this->load->model("Event_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->Event_model->leave($data);
+	}
+
+	public function delete($event_id)
+	{
+		$data["event_id"] = $event_id;
+		$this->load->model("Event_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->Event_model->delete($data);
+	}
+
+	public function update($event_id)
+	{
+		$data["event_id"] = $event_id;
+		$this->load->model("Event_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->Event_model->update($data);
 	}
 }
