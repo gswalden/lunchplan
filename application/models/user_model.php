@@ -35,7 +35,7 @@ class User_model extends CI_Model {
         $this->db->delete("friends"); // $data should contain both ids
     }
 
-    function private _delete_all_friends($id) // Deletes all user's friendships 
+    private function _delete_all_friends($id) // Deletes all user's friendships 
     {
         $this->db->where("user_id_1", $id);
         $this->db->or_where("user_id_2", $id);

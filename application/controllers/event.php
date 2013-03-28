@@ -58,7 +58,7 @@ class Event extends CI_Controller {
 		$this->Event_model->addGroup($data);
 	}
 
-	public function leave($event_id, $group_id) // remove group from event
+	public function deleteGroup($event_id, $group_id) // remove group from event
 	{
 		$data["event_id"] = $event_id;
 		$data["group_id"] = $group_id;
