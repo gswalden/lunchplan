@@ -33,12 +33,29 @@ class User extends CI_Controller {
 		$this->User_model->delete($data);
 	}
 
+	public function add_friend($user_id)
+	{
+		$data[] = ; // get current userid
+		$data[] = $user_id; // freind userid
+		$data = $this->_sort_IDs($data);
+
+		$this->load->model("User_model", "", TRUE); // auto-connects to db w/ TRUE
+		$this->User_model->add_friend($data);
+	}
+
 	public function delete_friend($user_id)
 	{
-		$data["user_id_1"] = ; // get current userid
-		$data["user_id_2"] = $user_id; // get current userid
+		$data[] = ; // get current userid
+		$data[] = $user_id; // friend userid
+		$data = $this->_sort_IDs($data);
 
 		$this->load->model("User_model", "", TRUE); // auto-connects to db w/ TRUE
 		$this->User_model->delete_friend($data);
+	}
+
+	private function _sort_IDs($ids) // sort low to high before entering db
+	{
+		sort($ids);
+		return array("user_id_1" => $ids[0], "user_id_2" => $ids[1]);
 	}
 }

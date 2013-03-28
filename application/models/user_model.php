@@ -32,8 +32,6 @@ class User_model extends CI_Model {
     function delete_friend($data) // Deletes a friendship
     {
         $this->db->where($data);
-        $this->db->or_where(array("user_id_1" => $data["user_id_2"],
-                                  "user_id_2" => $data["user_id_1"] ));
         $this->db->delete("friends"); // $data should contain both ids
     }
 
