@@ -7,7 +7,7 @@ class Event extends CI_Controller {
 		$this->load->view('event');
 	}
 
-	public function new() // create new event
+	public function create() // create new event
 	{
 		$data["event_name"] = $this->input->post("event_name", TRUE); // TRUE = XSS filter on
 		$data["location"]   = $this->input->post("location", TRUE);

@@ -12,6 +12,26 @@ class User_model extends CI_Model {
         $this->db->insert("users", $data);
     }
 
+    function getFriends($user_id)
+    {
+        $friends_array = $this->db->select("user_id_1, user_id_2")
+                                ->where("user_id_1", $user_id)
+                                ->or_where("user_id_2", $user_id)
+                                ->get("friends")
+                                ->result_array();
+        $friends = array();
+        array_walk_recursive($friends_array, function($f) use (&$friends, $user_id) 
+                                            { if ($f != $user_id) $friends[] = $f; });
+        return $this->db->where_in("user_id", $friends)
+                        ->get("users")
+                        ->result();        
+    }
+
+    function getUser($user_id)
+    {
+        return $this->db->get_where("users", array("user_id" => $user_id))->row();        
+    }
+
     function update($data, $id) // Update user
     {
         $this->db->where("id", $id);

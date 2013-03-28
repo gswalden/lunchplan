@@ -7,7 +7,7 @@ class User extends CI_Controller {
 		$this->load->view('signup');
 	}
 
-	public function new() // create new user
+	public function create() // create new user
 	{
 		$data["first_name"] = $this->input->post("first_name", TRUE); // TRUE = XSS filter on
 		$data["last_name"]  = $this->input->post("last_name", TRUE);

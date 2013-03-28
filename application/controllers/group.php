@@ -7,7 +7,7 @@ class Group extends CI_Controller {
 		$this->load->view('signup');
 	}
 
-	public function new() // create new group
+	public function create() // create new group
 	{
 		$data["name"] = $this->input->post("name", TRUE); // TRUE = XSS filter on
 		$data["user_id"] = $this->session->userdata("user_id"); // get current userid
