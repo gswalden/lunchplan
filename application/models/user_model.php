@@ -12,17 +12,33 @@ class User_model extends CI_Model {
         $this->db->insert("users", $data);
     }
 
-    function getFriends($user_id)
+    function getFriends($user_id, $array=false) // true = return arrays, false = return objects
     {
-        $friends_array = $this->db->select("user_id_1, user_id_2")
-                                ->where("user_id_1", $user_id)
-                                ->or_where("user_id_2", $user_id)
-                                ->get("friends")
-                                ->result_array();
+        $query = $this->db->select("user_id_1, user_id_2")
+                          ->where("user_id_1", $user_id)
+                          ->or_where("user_id_2", $user_id)
+                          ->get("friends");
+        if ($query->num_rows() < 1)
+            return false;                                  
+        $friends_array = $query->result_array();
         $friends = array();
         array_walk_recursive($friends_array, function($f) use (&$friends, $user_id) 
                                             { if ($f != $user_id) $friends[] = $f; });
-        return $this->db->where_in("user_id", $friends)
+        $query = $this->db->where_in("user_id", $friends)
+                          ->get("users");
+        if ($array)
+            return $query->result_array();
+        return $query->result();       
+    }
+
+    function getNonFriends($user_id)
+    {
+        $friends_array = $this->getFriends($user_id, true);
+        $friends = array($user_id); // array begins with current user, then add friends
+        if ($friends_array !== false)
+            array_walk_recursive($friends_array, function($f) use (&$friends) 
+                                                { $friends[] = $f; });
+        return $this->db->where_not_in("user_id", $friends)
                         ->get("users")
                         ->result();        
     }

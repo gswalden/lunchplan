@@ -4,7 +4,8 @@ class User extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('signup');
+		$this->load->view('header');
+		$this->load->view('welcome');
 	}
 
 	public function create() // create new user
@@ -41,6 +42,8 @@ class User extends CI_Controller {
 
 		$this->load->model("User_model");
 		$this->User_model->add_friend($data);
+		
+		redirect("/");
 	}
 
 	public function delete_friend($user_id) // delete friendship between current user & $user_id
@@ -51,6 +54,8 @@ class User extends CI_Controller {
 
 		$this->load->model("User_model");
 		$this->User_model->delete_friend($data);
+		
+		redirect("/");
 	}
 
 	private function _sort_IDs($ids) // sort low to high before entering db

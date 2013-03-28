@@ -24,6 +24,7 @@ class Welcome extends CI_Controller {
 		$this->load->model("User_model");
 		$data["user"] = $this->User_model->getUser($user_id);
 		$data["friends"] = $this->User_model->getFriends($user_id);
+		$data["nonfriends"] = $this->User_model->getNonFriends($user_id);
 
 
 		$this->load->view("header");
