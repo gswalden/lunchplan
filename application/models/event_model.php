@@ -32,4 +32,14 @@ class Event_model extends CI_Model {
     {
         $this->db->delete("events", $data);
     }
+
+    function addGroup($data)
+    {
+        $this->db->insert("event_groups", $data);
+    }
+
+    function deleteGroup($data)
+    {
+        $this->db->delete("event_groups", $data);
+    }
 }

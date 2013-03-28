@@ -36,7 +36,7 @@ class User extends CI_Controller {
 	public function add_friend($user_id) // add friendship between current user & $user_id
 	{
 		$data[] = $this->session->userdata("user_id"); // get current userid
-		$data[] = $user_id; // freind userid
+		$data[] = $user_id; // friend userid
 		$data = $this->_sort_IDs($data);
 
 		$this->load->model("User_model");
