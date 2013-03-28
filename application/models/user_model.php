@@ -29,12 +29,15 @@ class User_model extends CI_Model {
         $this->db->insert("friends", $data);
     }
 
-    function delete_friend($data) // Deletes a friendship or all user's friendships 
+    function delete_friend($data) // Deletes a friendship
     {
-        $this->db->delete("friends", $data); // $data should contain both ids
+        $this->db->where($data);
+        $this->db->or_where(array("user_id_1" => $data["user_id_2"],
+                                  "user_id_2" => $data["user_id_1"] ));
+        $this->db->delete("friends"); // $data should contain both ids
     }
 
-    function private _delete_all_friends($id) // Deletes a friendship or all user's friendships 
+    function private _delete_all_friends($id) // Deletes all user's friendships 
     {
         $this->db->where("user_id_1", $id);
         $this->db->or_where("user_id_2", $id);

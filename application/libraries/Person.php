@@ -1,5 +1,4 @@
-<?php
-require_once('classes/RandID.class.php');
+<?php if ( ! defined("BASEPATH")) exit("No direct script access allowed");
 
 class Person {
 	
