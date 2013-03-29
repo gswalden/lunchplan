@@ -10,6 +10,7 @@ class Event_model extends CI_Model {
     function add($data)
     {
     	$this->db->insert("events", $data);
+        return $this->db->insert_id();
     }
 
     function update($data, $id)
@@ -18,14 +19,19 @@ class Event_model extends CI_Model {
         $this->db->update("events", $data);
     }
 
-    function join($data)
+    function join($data, $redirect = TRUE)
     {
     	$this->db->insert("event_members", $data);
+
+        if ($redirect)
+            redirect("/");
     }
 
     function leave($data)
     {
         $this->db->delete("event_members", $data);
+
+        redirect("/");
     }
 
     function delete($data)
@@ -41,5 +47,38 @@ class Event_model extends CI_Model {
     function deleteGroup($data)
     {
         $this->db->delete("event_groups", $data);
+    }
+
+    function get_events($user_id, $array=false) // true = return arrays, false = return objects
+    {
+        $query = $this->db->select("event_id")
+                          ->where("user_id", $user_id)
+                          ->get("event_members");
+        if ($query->num_rows() < 1)
+            return false;                                  
+        $events_array = $query->result_array();
+        $events = array();
+        array_walk_recursive($events_array, function($e) use (&$events) 
+                                            { $events[] = $e; });
+        $query = $this->db->where_in("event_id", $events)
+                          ->get("events");
+        if ($array)
+            return $query->result_array();
+        return $query->result();       
+    }
+
+    function get_non_events($user_id)
+    {
+        $events_array = $this->get_events($user_id, true);
+        $events = array();
+        if ($events_array !== false):
+            array_walk_recursive($events_array, function($e) use (&$events) 
+                                                { $events[] = $e; });
+            $this->db->where_not_in("event_id", $events);
+        endif;
+        $query = $this->db->get("events");
+        if ($query->num_rows() < 1)
+            return false;
+        return $query->result();        
     }
 }

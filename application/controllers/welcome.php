@@ -23,6 +23,7 @@ class Welcome extends CI_Controller {
 		$user_id = $this->session->userdata("user_id");
 		$this->load->model("User_model");
 		$this->load->model("Group_model");
+		$this->load->model("Event_model");
 		$data["user"] = $this->User_model->getUser($user_id);
 		$data["friends"] = $this->User_model->getFriends($user_id);
 		$data["nonfriends"] = $this->User_model->getNonFriends($user_id);
@@ -65,6 +66,8 @@ class Welcome extends CI_Controller {
 
 		$data["groups"] = $this->Group_model->getGroups($user_id);
 		$data["nongroups"] = $this->Group_model->getNonGroups($user_id);
+		$data["events"] = $this->Event_model->get_events($user_id);
+		$data["nonevents"] = $this->Event_model->get_non_events($user_id);
 		$this->load->helper("form");
 		$this->load->view("header");
 		$this->load->view("welcome", $data);

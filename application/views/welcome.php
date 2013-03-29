@@ -51,12 +51,53 @@
 	?>
 	<br />
 	<br />
+	List of Events: <br />
+	<?php
+		if ($events === false)
+			echo "None <br />";
+		else 
+			foreach ($events as $event)
+				echo $event->name . ' <a href="/lunchplan/index.php/event/leave/' . $event->event_id . '">leave</a><br />';
+	?>
+	List of Available Events: <br />
+	<?php
+		if ($nonevents === false)
+			echo "None <br />";
+		else 
+			foreach ($nonevents as $nonevent)
+				echo $nonevent->name . ' <a href="/lunchplan/index.php/event/join/' . $nonevent->event_id . '">join</a><br />';
+	?>
+	<br />
+	<br />
 	<?php  
 		echo form_open("/event/create");
 		echo form_input($input_event_name);
 		echo form_input($input_event_loc);
 		echo form_dropdown("start", $date_options, "today");
 		echo form_dropdown("length", $length_options, "1hr");
+		echo "<br />";
+		echo "Invite groups:";
+		echo "<br />";
+		if ($groups === false)
+			echo "None <br />";
+		else {
+			$i = 1;
+			foreach ($groups as $group):
+				echo form_checkbox("group$i", $group->group_id, FALSE) . " " . $group->name . "<br />";
+				$i++;
+			endforeach;
+		}
+		echo "Invite friends:";
+		echo "<br />";
+		if ($friends === false)
+			echo "None <br />";
+		else {
+			$i = 1;
+			foreach ($friends as $friend):
+				echo form_checkbox("friend$i", $friend->user_id, FALSE) . " " . $friend->first_name . "<br />";
+				$i++;
+			endforeach;
+		}
 		echo form_submit($event_submit, "Submit");
 		echo form_close();
 	?>

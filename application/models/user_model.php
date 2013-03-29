@@ -10,6 +10,7 @@ class User_model extends CI_Model {
     function add($data)  // Create new user
     {
         $this->db->insert("users", $data);
+        return $this->db->insert_id();
     }
 
     function getFriends($user_id, $array=false) // true = return arrays, false = return objects

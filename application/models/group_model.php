@@ -10,6 +10,7 @@ class Group_model extends CI_Model {
     function add($data)
     {
     	$this->db->insert("groups", $data);
+        return $this->db->insert_id();
     }
 
     function update($data, $id)
