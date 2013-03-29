@@ -7,6 +7,14 @@ class Event extends CI_Controller {
 		$this->load->view('event');
 	}
 
+	public function add_group($event_id, $group_id) // add group to event
+	{
+		$data["event_id"] = $event_id;
+		$data["group_id"] = $group_id;
+		$this->load->model("Event_model");
+		$this->Event_model->add_group($data);
+	}
+
 	public function create() // create new event
 	{
 		$user_id = $this->session->userdata("user_id");	
@@ -73,6 +81,21 @@ class Event extends CI_Controller {
 		redirect("/");
 	}
 
+	public function delete($event_id) // delete event
+	{
+		$data["event_id"] = $event_id;
+		$this->load->model("Event_model");
+		$this->Event_model->delete($data);
+	}
+
+	public function delete_group($event_id, $group_id) // remove group from event
+	{
+		$data["event_id"] = $event_id;
+		$data["group_id"] = $group_id;
+		$this->load->model("Event_model");
+		$this->Event_model->delete_group($data);
+	}
+
 	public function join($event_id) // add current user to event
 	{
 		$data["user_id"] = $this->session->userdata("user_id"); // Get current user_id
@@ -89,33 +112,10 @@ class Event extends CI_Controller {
 		$this->Event_model->leave($data);
 	}
 
-	public function delete($event_id) // delete event
-	{
-		$data["event_id"] = $event_id;
-		$this->load->model("Event_model");
-		$this->Event_model->delete($data);
-	}
-
 	public function update($event_id) // update event
 	{
 		$data["event_id"] = $event_id;
 		$this->load->model("Event_model");
 		$this->Event_model->update($data);
-	}
-
-	public function add_group($event_id, $group_id) // add group to event
-	{
-		$data["event_id"] = $event_id;
-		$data["group_id"] = $group_id;
-		$this->load->model("Event_model");
-		$this->Event_model->add_group($data);
-	}
-
-	public function delete_group($event_id, $group_id) // remove group from event
-	{
-		$data["event_id"] = $event_id;
-		$data["group_id"] = $group_id;
-		$this->load->model("Event_model");
-		$this->Event_model->delete_group($data);
 	}
 }
