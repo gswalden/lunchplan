@@ -49,6 +49,17 @@
 		echo form_submit($group_submit, "Submit");
 		echo form_close();
 	?>
+	<br />
+	<br />
+	<?php  
+		echo form_open("/event/create");
+		echo form_input($input_event_name);
+		echo form_input($input_event_loc);
+		echo form_dropdown("start", $date_options, "today");
+		echo form_dropdown("length", $length_options, "1hr");
+		echo form_submit($event_submit, "Submit");
+		echo form_close();
+	?>
 	<script src="js/scripts.js"></script>
 </body>
 </html>

@@ -9,15 +9,42 @@ class Event extends CI_Controller {
 
 	public function create() // create new event
 	{
-		$data["event_name"] = $this->input->post("event_name", TRUE); // TRUE = XSS filter on
-		$data["location"]   = $this->input->post("location", TRUE);
-		$data["start"]      = $this->input->post("start", TRUE);
-		$data["end"]        = $this->input->post("end", TRUE);
-		$data["user_id"]    = $this->session->userdata("user_id");		
-		$data["group"]      = $this->input->post("group", TRUE);		
+		$data["name"] = $this->input->post("event_name");
+		$data["location"]   = $this->input->post("location");
+		$datetime      		= new DateTime(null, new DateTimeZone("America/New_York"));
+		switch ($this->input->post("start")) {
+			case "today":
+				break;
+			case "tomorrow":
+				$datetime->add(new DateInterval("P1D"));
+				break;
+			case "overmorrow":
+				$datetime->add(new DateInterval("P2D"));
+				break;	
+		}
+		$data["start"] = $datetime->format("Y-m-d H:i:s");
+		switch ($this->input->post("length")) {
+			case "30min":
+				$datetime->add(new DateInterval("PT30M"));
+				break;
+			case "1hr":
+				$datetime->add(new DateInterval("PT1H"));
+				break;
+			case "2hr":
+				$datetime->add(new DateInterval("PT2H"));
+				break;	
+		}
+		$data["end"]     = $datetime->format("Y-m-d H:i:s");
+		unset($datetime);
+		$data["user_id"] = $this->session->userdata("user_id");		
 
 		$this->load->model("Event_model");
 		$this->Event_model->add($data);
+
+		//$data["groups"]      = $this->input->post("group");
+		//$data["invites"]      = $this->input->post("group");
+
+		redirect("/");
 	}
 
 	public function join($event_id) // add current user to event

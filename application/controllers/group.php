@@ -9,7 +9,7 @@ class Group extends CI_Controller {
 
 	public function create() // create new group
 	{
-		$data["name"] = $this->input->post("group_name", TRUE); // TRUE = XSS filter on
+		$data["name"] = $this->input->post("group_name");
 		$data["user_id"] = $this->session->userdata("user_id"); // get current userid
 
 		$this->load->model("Group_model");

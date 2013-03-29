@@ -10,9 +10,9 @@ class User extends CI_Controller {
 
 	public function create() // create new user
 	{
-		$data["first_name"] = $this->input->post("first_name", TRUE); // TRUE = XSS filter on
-		$data["last_name"]  = $this->input->post("last_name", TRUE);
-		$data["email"]      = $this->input->post("email", TRUE);
+		$data["first_name"] = $this->input->post("first_name");
+		$data["last_name"]  = $this->input->post("last_name");
+		$data["email"]      = $this->input->post("email");
 
 		$this->load->model("User_model");
 		$this->User_model->add($data);

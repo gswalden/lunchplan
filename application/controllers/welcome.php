@@ -22,6 +22,7 @@ class Welcome extends CI_Controller {
 		$this->session->set_userdata("user_id", "111"); // temporary for dev
 		$user_id = $this->session->userdata("user_id");
 		$this->load->model("User_model");
+		$this->load->model("Group_model");
 		$data["user"] = $this->User_model->getUser($user_id);
 		$data["friends"] = $this->User_model->getFriends($user_id);
 		$data["nonfriends"] = $this->User_model->getNonFriends($user_id);
@@ -45,8 +46,23 @@ class Welcome extends CI_Controller {
 				              "maxlength"   => "100");
 		$data["group_submit"] =	array(
 				              "name"        => "group_submit");
+		$data["input_event_name"] =	array(
+				              "name"        => "event_name",
+				              "placeholder" => "Event name");
+		$data["input_event_loc"] =	array(
+				              "name"        => "location",
+				              "placeholder" => "Location");
+        $data["date_options"] = array(
+        					"today"		    => "Today",
+                  			"tomorrow"      => "Tomorrow",
+                  			"overmorrow"    => "Overmorrow");
+		$data["length_options"] =	array(
+				              "30min"       => "30 Minutes",
+				              "1hr"         => "1 Hour",
+				              "2hr"         => "2 Hours");
+		$data["event_submit"] =	array(
+				              "name"        => "event_submit");
 
-		$this->load->model("Group_model");
 		$data["groups"] = $this->Group_model->getGroups($user_id);
 		$data["nongroups"] = $this->Group_model->getNonGroups($user_id);
 		$this->load->helper("form");
