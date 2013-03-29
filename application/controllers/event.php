@@ -12,7 +12,7 @@ class Event extends CI_Controller {
 		$user_id = $this->session->userdata("user_id");	
 		$data["name"] = $this->input->post("event_name");
 		$data["location"]   = $this->input->post("location");
-		$datetime      		= new DateTime(null, new DateTimeZone("America/New_York"));
+		$datetime      		= new DateTime(NULL, new DateTimeZone("America/New_York"));
 		switch ($this->input->post("start")) {
 			case "today":
 				break;
@@ -53,7 +53,7 @@ class Event extends CI_Controller {
 		$post_data = $this->input->post("group$i");
 		while ($post_data !== FALSE):
 			$data["group_id"] = $post_data;
-			$this->Event_model->addGroup($data);
+			$this->Event_model->add_group($data);
 			$i++;
 			$post_data = $this->input->post("group$i");
 		endwhile;
@@ -103,19 +103,19 @@ class Event extends CI_Controller {
 		$this->Event_model->update($data);
 	}
 
-	public function addGroup($event_id, $group_id) // add group to event
+	public function add_group($event_id, $group_id) // add group to event
 	{
 		$data["event_id"] = $event_id;
 		$data["group_id"] = $group_id;
 		$this->load->model("Event_model");
-		$this->Event_model->addGroup($data);
+		$this->Event_model->add_group($data);
 	}
 
-	public function deleteGroup($event_id, $group_id) // remove group from event
+	public function delete_group($event_id, $group_id) // remove group from event
 	{
 		$data["event_id"] = $event_id;
 		$data["group_id"] = $group_id;
 		$this->load->model("Event_model");
-		$this->Event_model->deleteGroup($data);
+		$this->Event_model->delete_group($data);
 	}
 }

@@ -2,7 +2,7 @@
 	Hello <?php echo $user->first_name; ?><br />
 	List of Friends: <br />
 	<?php
-		if ($friends === false)
+		if ($friends === FALSE)
 			echo "None <br />";
 		else 
 			foreach ($friends as $friend)
@@ -10,11 +10,11 @@
 	?>
 	List of Non-Friends: <br />
 	<?php
-		if ($nonfriends === false)
+		if ($non_friends === FALSE)
 			echo "None <br />";
 		else
-			foreach ($nonfriends as $nonfriend)
-				echo $nonfriend->first_name . ' <a href="/lunchplan/index.php/user/add_friend/' . $nonfriend->user_id . '">add</a><br />';
+			foreach ($non_friends as $non_friend)
+				echo $non_friend->first_name . ' <a href="/lunchplan/index.php/user/add_friend/' . $non_friend->user_id . '">add</a><br />';
 	?>
 	<br />
 	<br />
@@ -27,7 +27,7 @@
 	<br />
 	List of Groups: <br />
 	<?php
-		if ($groups === false)
+		if ($groups === FALSE)
 			echo "None <br />";
 		else 
 			foreach ($groups as $group)
@@ -35,11 +35,11 @@
 	?>
 	List of Available Groups: <br />
 	<?php
-		if ($nongroups === false)
+		if ($non_groups === FALSE)
 			echo "None <br />";
 		else 
-			foreach ($nongroups as $nongroup)
-				echo $nongroup->name . ' <a href="/lunchplan/index.php/group/join/' . $nongroup->group_id . '">join</a><br />';
+			foreach ($non_groups as $non_group)
+				echo $non_group->name . ' <a href="/lunchplan/index.php/group/join/' . $non_group->group_id . '">join</a><br />';
 	?>
 	<br />
 	<br />
@@ -53,7 +53,7 @@
 	<br />
 	List of Events: <br />
 	<?php
-		if ($events === false)
+		if ($events === FALSE)
 			echo "None <br />";
 		else 
 			foreach ($events as $event)
@@ -61,11 +61,11 @@
 	?>
 	List of Available Events: <br />
 	<?php
-		if ($nonevents === false)
+		if ($non_events === FALSE)
 			echo "None <br />";
 		else 
-			foreach ($nonevents as $nonevent)
-				echo $nonevent->name . ' <a href="/lunchplan/index.php/event/join/' . $nonevent->event_id . '">join</a><br />';
+			foreach ($non_events as $non_event)
+				echo $non_event->name . ' <a href="/lunchplan/index.php/event/join/' . $non_event->event_id . '">join</a><br />';
 	?>
 	<br />
 	<br />
@@ -78,7 +78,7 @@
 		echo "<br />";
 		echo "Invite groups:";
 		echo "<br />";
-		if ($groups === false)
+		if ($groups === FALSE)
 			echo "None <br />";
 		else {
 			$i = 1;
@@ -89,7 +89,7 @@
 		}
 		echo "Invite friends:";
 		echo "<br />";
-		if ($friends === false)
+		if ($friends === FALSE)
 			echo "None <br />";
 		else {
 			$i = 1;

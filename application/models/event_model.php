@@ -13,10 +13,54 @@ class Event_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    function update($data, $id)
+    function add_group($data)
     {
-        $this->db->where("id", $id);
-        $this->db->update("events", $data);
+        $this->db->insert("event_groups", $data);
+    }
+
+    function delete($data)
+    {
+        $this->db->delete("events", $data);
+
+        redirect("/");
+    }
+
+    function delete_group($data)
+    {
+        $this->db->delete("event_groups", $data);
+    }
+
+    function get_events($user_id, $array=FALSE) // TRUE = return arrays, FALSE = return objects
+    {
+        $query = $this->db->select("event_id")
+                          ->where("user_id", $user_id)
+                          ->get("event_members");
+        if ($query->num_rows() < 1)
+            return FALSE;                                  
+        $events_array = $query->result_array();
+        $events = array();
+        array_walk_recursive($events_array, function($e) use (&$events) 
+                                            { $events[] = $e; });
+        $query = $this->db->where_in("event_id", $events)
+                          ->get("events");
+        if ($array)
+            return $query->result_array();
+        return $query->result();       
+    }
+
+    function get_non_events($user_id)
+    {
+        $events_array = $this->get_events($user_id, TRUE);
+        $events = array();
+        if ($events_array !== FALSE):
+            array_walk_recursive($events_array, function($e) use (&$events) 
+                                                { $events[] = $e; });
+            $this->db->where_not_in("event_id", $events);
+        endif;
+        $query = $this->db->get("events");
+        if ($query->num_rows() < 1)
+            return FALSE;
+        return $query->result();        
     }
 
     function join($data, $redirect = TRUE)
@@ -34,51 +78,9 @@ class Event_model extends CI_Model {
         redirect("/");
     }
 
-    function delete($data)
+    function update($data, $id)
     {
-        $this->db->delete("events", $data);
-    }
-
-    function addGroup($data)
-    {
-        $this->db->insert("event_groups", $data);
-    }
-
-    function deleteGroup($data)
-    {
-        $this->db->delete("event_groups", $data);
-    }
-
-    function get_events($user_id, $array=false) // true = return arrays, false = return objects
-    {
-        $query = $this->db->select("event_id")
-                          ->where("user_id", $user_id)
-                          ->get("event_members");
-        if ($query->num_rows() < 1)
-            return false;                                  
-        $events_array = $query->result_array();
-        $events = array();
-        array_walk_recursive($events_array, function($e) use (&$events) 
-                                            { $events[] = $e; });
-        $query = $this->db->where_in("event_id", $events)
-                          ->get("events");
-        if ($array)
-            return $query->result_array();
-        return $query->result();       
-    }
-
-    function get_non_events($user_id)
-    {
-        $events_array = $this->get_events($user_id, true);
-        $events = array();
-        if ($events_array !== false):
-            array_walk_recursive($events_array, function($e) use (&$events) 
-                                                { $events[] = $e; });
-            $this->db->where_not_in("event_id", $events);
-        endif;
-        $query = $this->db->get("events");
-        if ($query->num_rows() < 1)
-            return false;
-        return $query->result();        
+        $this->db->where("id", $id);
+        $this->db->update("events", $data);
     }
 }

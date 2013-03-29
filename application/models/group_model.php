@@ -13,34 +13,18 @@ class Group_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    function update($data, $id)
-    {
-        $this->db->where("id", $id);
-        $this->db->update("groups", $data);
-    }
-
-    function join($data)
-    {
-    	$this->db->insert("group_members", $data);
-    }
-
-    function leave($data)
-    {
-        $this->db->delete("group_members", $data);
-    }
-
     function delete($data)
     {
         $this->db->delete("groups", $data);
-    }
+    }    
 
-    function getGroups($user_id, $array=false) // true = return arrays, false = return objects
+    function get_groups($user_id, $array=FALSE) // TRUE = return arrays, FALSE = return objects
     {
         $query = $this->db->select("group_id")
                           ->where("user_id", $user_id)
                           ->get("group_members");
         if ($query->num_rows() < 1)
-            return false;                                  
+            return FALSE;                                  
         $groups_array = $query->result_array();
         $groups = array();
         array_walk_recursive($groups_array, function($g) use (&$groups) 
@@ -52,18 +36,35 @@ class Group_model extends CI_Model {
         return $query->result();       
     }
 
-    function getNonGroups($user_id)
+    function get_non_groups($user_id)
     {
-        $groups_array = $this->getGroups($user_id, true);
+        $groups_array = $this->get_groups($user_id, TRUE);
         $groups = array();
-        if ($groups_array !== false):
+        if ($groups_array !== FALSE):
             array_walk_recursive($groups_array, function($g) use (&$groups) 
                                                 { $groups[] = $g; });
             $this->db->where_not_in("group_id", $groups);
         endif;
         $query = $this->db->get("groups");
         if ($query->num_rows() < 1)
-            return false;
+            return FALSE;
         return $query->result();        
     }
+
+    function join($data)
+    {
+    	$this->db->insert("group_members", $data);
+    }
+
+    function leave($data)
+    {
+        $this->db->delete("group_members", $data);
+    }
+    
+    function update($data, $id)
+    {
+        $this->db->where("id", $id);
+        $this->db->update("groups", $data);
+    }
+    
 }

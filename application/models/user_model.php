@@ -13,14 +13,31 @@ class User_model extends CI_Model {
         return $this->db->insert_id();
     }
 
-    function getFriends($user_id, $array=false) // true = return arrays, false = return objects
+    function add_friend($data) // Create friendship
+    {
+        $this->db->insert("friends", $data);
+    }
+    
+    function delete($data) // Delete user
+    {
+        $this->db->delete("users", $data);
+        $this->_delete_all_friends($data['id']);
+    }
+
+    function delete_friend($data) // Deletes a friendship
+    {
+        $this->db->where($data);
+        $this->db->delete("friends"); // $data should contain both ids
+    }
+
+    function get_friends($user_id, $array=FALSE) // TRUE = return arrays, FALSE = return objects
     {
         $query = $this->db->select("user_id_1, user_id_2")
                           ->where("user_id_1", $user_id)
                           ->or_where("user_id_2", $user_id)
                           ->get("friends");
         if ($query->num_rows() < 1)
-            return false;                                  
+            return FALSE;                                  
         $friends_array = $query->result_array();
         $friends = array();
         array_walk_recursive($friends_array, function($f) use (&$friends, $user_id) 
@@ -32,21 +49,21 @@ class User_model extends CI_Model {
         return $query->result();       
     }
 
-    function getNonFriends($user_id)
+    function get_non_friends($user_id)
     {
-        $friends_array = $this->getFriends($user_id, true);
+        $friends_array = $this->get_friends($user_id, TRUE);
         $friends = array($user_id); // array begins with current user, then add friends
-        if ($friends_array !== false)
+        if ($friends_array !== FALSE)
             array_walk_recursive($friends_array, function($f) use (&$friends) 
                                                 { $friends[] = $f; });
         $query = $this->db->where_not_in("user_id", $friends)
                           ->get("users");
         if ($query->num_rows() < 1)
-            return false;
+            return FALSE;
         return $query->result();
     }
 
-    function getUser($user_id)
+    function get_user($user_id)
     {
         return $this->db->get_where("users", array("user_id" => $user_id))->row();        
     }
@@ -55,23 +72,6 @@ class User_model extends CI_Model {
     {
         $this->db->where("id", $id);
         $this->db->update("users", $data);
-    }
-
-    function delete($data) // Delete user
-    {
-        $this->db->delete("users", $data);
-        $this->_delete_all_friends($data['id']);
-    }
-
-    function add_friend($data) // Create friendship
-    {
-        $this->db->insert("friends", $data);
-    }
-
-    function delete_friend($data) // Deletes a friendship
-    {
-        $this->db->where($data);
-        $this->db->delete("friends"); // $data should contain both ids
     }
 
     private function _delete_all_friends($id) // Deletes all user's friendships 

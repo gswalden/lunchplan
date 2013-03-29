@@ -17,7 +17,7 @@ class Person {
 		endif;
 	}
 	
-	public function getGroups() {
+	public function get_groups() {
 		return $this->groups;
 	}
 

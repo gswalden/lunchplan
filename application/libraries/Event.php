@@ -35,7 +35,7 @@ class Event {
 		return $this->flexible;
 	}
 
-	public function getGroups() {
+	public function get_groups() {
 		return $this->groups;
 	}
 
@@ -59,7 +59,7 @@ class Event {
 		$this->date = $date;
 	}
 
-	public function setFlexible($flex = false) {
+	public function setFlexible($flex = FALSE) {
 		// True if the times ARE flexible
 		$this->flexible = $flex;
 	}

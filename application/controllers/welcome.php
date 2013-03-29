@@ -24,9 +24,9 @@ class Welcome extends CI_Controller {
 		$this->load->model("User_model");
 		$this->load->model("Group_model");
 		$this->load->model("Event_model");
-		$data["user"] = $this->User_model->getUser($user_id);
-		$data["friends"] = $this->User_model->getFriends($user_id);
-		$data["nonfriends"] = $this->User_model->getNonFriends($user_id);
+		$data["user"] = $this->User_model->get_user($user_id);
+		$data["friends"] = $this->User_model->get_friends($user_id);
+		$data["non_friends"] = $this->User_model->get_non_friends($user_id);
 		$data["input_first"] =	array(
 				              "name"        => "first_name",
 				              "placeholder" => "First name",
@@ -64,10 +64,10 @@ class Welcome extends CI_Controller {
 		$data["event_submit"] =	array(
 				              "name"        => "event_submit");
 
-		$data["groups"] = $this->Group_model->getGroups($user_id);
-		$data["nongroups"] = $this->Group_model->getNonGroups($user_id);
+		$data["groups"] = $this->Group_model->get_groups($user_id);
+		$data["non_groups"] = $this->Group_model->get_non_groups($user_id);
 		$data["events"] = $this->Event_model->get_events($user_id);
-		$data["nonevents"] = $this->Event_model->get_non_events($user_id);
+		$data["non_events"] = $this->Event_model->get_non_events($user_id);
 		$this->load->helper("form");
 		$this->load->view("header");
 		$this->load->view("welcome", $data);
