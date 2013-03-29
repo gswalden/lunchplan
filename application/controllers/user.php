@@ -16,6 +16,8 @@ class User extends CI_Controller {
 
 		$this->load->model("User_model");
 		$this->User_model->add($data);
+
+		redirect("/");
 	}
 
 	public function update($user_id) // update user
@@ -58,7 +60,7 @@ class User extends CI_Controller {
 		redirect("/");
 	}
 
-	private function _sort_IDs($ids) // sort low to high before entering db
+	private function _sort_IDs($ids) // sort low to high before entering db; important for simpler add/drop functions
 	{
 		sort($ids);
 		return array("user_id_1" => $ids[0], "user_id_2" => $ids[1]);

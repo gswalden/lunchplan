@@ -25,8 +25,31 @@ class Welcome extends CI_Controller {
 		$data["user"] = $this->User_model->getUser($user_id);
 		$data["friends"] = $this->User_model->getFriends($user_id);
 		$data["nonfriends"] = $this->User_model->getNonFriends($user_id);
+		$data["input_first"] =	array(
+				              "name"        => "first_name",
+				              "placeholder" => "First name",
+				              "maxlength"   => "100");
+		$data["input_last"] =	array(
+				              "name"        => "last_name",
+				              "placeholder" => "Last name",
+				              "maxlength"   => "100");
+		$data["input_email"] =	array(
+				              "name"        => "email",
+				              "placeholder" => "E-mail",
+				              "maxlength"   => "100");
+		$data["name_submit"] =	array(
+				              "name"        => "name_submit");
+		$data["input_group_name"] =	array(
+				              "name"        => "group_name",
+				              "placeholder" => "Group name",
+				              "maxlength"   => "100");
+		$data["group_submit"] =	array(
+				              "name"        => "group_submit");
 
-
+		$this->load->model("Group_model");
+		$data["groups"] = $this->Group_model->getGroups($user_id);
+		$data["nongroups"] = $this->Group_model->getNonGroups($user_id);
+		$this->load->helper("form");
 		$this->load->view("header");
 		$this->load->view("welcome", $data);
 	}

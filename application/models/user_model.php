@@ -38,9 +38,11 @@ class User_model extends CI_Model {
         if ($friends_array !== false)
             array_walk_recursive($friends_array, function($f) use (&$friends) 
                                                 { $friends[] = $f; });
-        return $this->db->where_not_in("user_id", $friends)
-                        ->get("users")
-                        ->result();        
+        $query = $this->db->where_not_in("user_id", $friends)
+                          ->get("users");
+        if ($query->num_rows() < 1)
+            return false;
+        return $query->result();
     }
 
     function getUser($user_id)

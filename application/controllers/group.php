@@ -9,11 +9,13 @@ class Group extends CI_Controller {
 
 	public function create() // create new group
 	{
-		$data["name"] = $this->input->post("name", TRUE); // TRUE = XSS filter on
+		$data["name"] = $this->input->post("group_name", TRUE); // TRUE = XSS filter on
 		$data["user_id"] = $this->session->userdata("user_id"); // get current userid
 
 		$this->load->model("Group_model");
 		$this->Group_model->add($data);
+
+		redirect("/");
 	}
 
 	public function update($group_id) // update group
@@ -31,6 +33,8 @@ class Group extends CI_Controller {
 
 		$this->load->model("Group_model");
 		$this->Group_model->join($data);
+
+		redirect("/");
 	}
 
 	public function leave($group_id) // remove current user from group
@@ -40,6 +44,8 @@ class Group extends CI_Controller {
 
 		$this->load->model("Group_model");
 		$this->Group_model->leave($data);
+
+		redirect("/");
 	}
 
 	public function delete($group_id) // delete group
