@@ -18,12 +18,14 @@ class Group extends CI_Controller {
 		redirect("/");
 	}
 
-	public function update($group_id) // update group
+	public function delete($group_id) // delete group
 	{
 		$data["group_id"] = $group_id;
 
 		$this->load->model("Group_model");
-		$this->Group_model->update($data);
+		$this->Group_model->delete($data);
+
+		redirect("/");
 	}
 
 	public function join($group_id) // add current user to group
@@ -48,11 +50,11 @@ class Group extends CI_Controller {
 		redirect("/");
 	}
 
-	public function delete($group_id) // delete group
+	public function update($group_id) // update group
 	{
 		$data["group_id"] = $group_id;
 
 		$this->load->model("Group_model");
-		$this->Group_model->delete($data);
+		$this->Group_model->update($data);
 	}
 }

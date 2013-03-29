@@ -56,8 +56,12 @@
 		if ($events === FALSE)
 			echo "None <br />";
 		else 
-			foreach ($events as $event)
-				echo $event->name . ' <a href="/lunchplan/index.php/event/leave/' . $event->event_id . '">leave</a><br />';
+			foreach ($events as $event):
+				echo $event->name . ' <a href="/lunchplan/index.php/event/leave/' . $event->event_id . '">leave</a>';
+				if ($event->user_id == $user->user_id)
+					echo ' <a href="/lunchplan/index.php/event/delete/' . $event->event_id . '">delete</a>';
+				echo "<br />";
+			endforeach;
 	?>
 	List of Available Events: <br />
 	<?php

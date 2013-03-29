@@ -16,6 +16,8 @@ class Group_model extends CI_Model {
     function delete($data)
     {
         $this->db->delete("groups", $data);
+        $this->db->delete("group_members", $data);
+        $this->db->delete("event_groups", $data);
     }    
 
     function get_groups($user_id, $array=FALSE) // TRUE = return arrays, FALSE = return objects

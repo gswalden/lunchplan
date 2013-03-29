@@ -21,8 +21,8 @@ class Event_model extends CI_Model {
     function delete($data)
     {
         $this->db->delete("events", $data);
-
-        redirect("/");
+        $this->db->delete("event_members", $data);
+        $this->db->delete("event_groups", $data);
     }
 
     function delete_group($data)
@@ -38,11 +38,13 @@ class Event_model extends CI_Model {
         if ($query->num_rows() < 1)
             return FALSE;                                  
         $events_array = $query->result_array();
+
         $events = array();
         array_walk_recursive($events_array, function($e) use (&$events) 
                                             { $events[] = $e; });
         $query = $this->db->where_in("event_id", $events)
                           ->get("events");
+        
         if ($array)
             return $query->result_array();
         return $query->result();       
@@ -51,6 +53,7 @@ class Event_model extends CI_Model {
     function get_non_events($user_id)
     {
         $events_array = $this->get_events($user_id, TRUE);
+        
         $events = array();
         if ($events_array !== FALSE):
             array_walk_recursive($events_array, function($e) use (&$events) 
@@ -58,24 +61,20 @@ class Event_model extends CI_Model {
             $this->db->where_not_in("event_id", $events);
         endif;
         $query = $this->db->get("events");
+        
         if ($query->num_rows() < 1)
             return FALSE;
         return $query->result();        
     }
 
-    function join($data, $redirect = TRUE)
+    function join($data)
     {
     	$this->db->insert("event_members", $data);
-
-        if ($redirect)
-            redirect("/");
     }
 
     function leave($data)
     {
         $this->db->delete("event_members", $data);
-
-        redirect("/");
     }
 
     function update($data, $id)

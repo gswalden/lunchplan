@@ -53,7 +53,7 @@ class Event extends CI_Controller {
 		unset($data);
 		$data = array("event_id" => $event_id,
 					  "user_id"  => $user_id);
-		$this->Event_model->join($data, FALSE);
+		$this->Event_model->join($data);
 
 		unset($data);
 		$data["event_id"] = $event_id;
@@ -73,7 +73,7 @@ class Event extends CI_Controller {
 		$post_data = $this->input->post("friend$i");
 		while ($post_data !== FALSE):
 			$data["user_id"] = $post_data;
-			$this->Event_model->join($data, FALSE);
+			$this->Event_model->join($data);
 			$i++;
 			$post_data = $this->input->post("friend$i");
 		endwhile;
@@ -86,6 +86,7 @@ class Event extends CI_Controller {
 		$data["event_id"] = $event_id;
 		$this->load->model("Event_model");
 		$this->Event_model->delete($data);
+		redirect("/");
 	}
 
 	public function delete_group($event_id, $group_id) // remove group from event
@@ -102,6 +103,7 @@ class Event extends CI_Controller {
 		$data["event_id"] = $event_id;
 		$this->load->model("Event_model");
 		$this->Event_model->join($data);
+		redirect("/");
 	}
 
 	public function leave($event_id) // remove current user from event
@@ -110,6 +112,7 @@ class Event extends CI_Controller {
 		$data["event_id"] = $event_id;
 		$this->load->model("Event_model");
 		$this->Event_model->leave($data);
+		redirect("/");
 	}
 
 	public function update($event_id) // update event
