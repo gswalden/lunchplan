@@ -21,8 +21,6 @@ class Event_model extends CI_Model {
     function delete($data)
     {
         $this->db->delete("events", $data);
-        $this->db->delete("event_members", $data);
-        $this->db->delete("event_groups", $data);
     }
 
     function delete_group($data)

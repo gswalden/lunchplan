@@ -21,7 +21,6 @@ class User_model extends CI_Model {
     function delete($data) // Delete user
     {
         $this->db->delete("users", $data);
-        $this->_delete_all_friends($data['id']);
     }
 
     function delete_friend($data) // Deletes a friendship
