@@ -10,9 +10,15 @@ class Cronbaby extends CI_Controller {
 		
 	}
 
+	private function _expired_invites()
+	{
+			
+	}
+
 	private function _optimize_db()
 	{
 		$this->dbutil->optimize_database();
 	}
+
 
 }
