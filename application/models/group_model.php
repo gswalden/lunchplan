@@ -18,7 +18,7 @@ class Group_model extends CI_Model {
         $this->db->delete("groups", $data);
     }    
 
-    function get_groups($user_id, $array=FALSE, $pending = 0) // TRUE = return arrays, FALSE = return objects
+    function get_groups($user_id, $pending = 0) // TRUE = return arrays, FALSE = return objects
     {
         if ($pending < 2) // 0 = get groups; 1 = get group invites; 2 = get others
             $this->db->where("pending", $pending);
@@ -27,14 +27,14 @@ class Group_model extends CI_Model {
                           ->get("group_members");
         if ($query->num_rows() < 1)
             return FALSE;                                  
-        $groups_array = $query->result_array();
+        $groups_array = $query->result();
+        
         $groups = array();
-        array_walk_recursive($groups_array, function($g) use (&$groups) 
-                                            { $groups[] = $g; });
+        foreach ($groups_array as $group)
+            $groups[] = $group->group_id;
         $query = $this->db->where_in("group_id", $groups)
                           ->get("groups");
-        if ($array)
-            return $query->result_array();
+
         return $query->result();       
     }
 
@@ -48,11 +48,11 @@ class Group_model extends CI_Model {
 
     function get_non_groups($user_id)
     {
-        $groups_array = $this->get_groups($user_id, TRUE, 2);
-        $groups = array();
+        $groups_array = $this->get_groups($user_id, 2);
         if ($groups_array !== FALSE):
-            array_walk_recursive($groups_array, function($g) use (&$groups) 
-                                                { $groups[] = $g; });
+            $groups = array();
+            foreach ($groups_array as $group)
+                $groups[] = $group->group_id;
             $this->db->where_not_in("group_id", $groups);
         endif;
         $query = $this->db->get("groups");

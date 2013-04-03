@@ -29,7 +29,7 @@ class User_model extends CI_Model {
         $this->db->delete("friends"); // $data should contain both ids
     }
 
-    function get_friends($user_id, $array=FALSE, $pending=0) // TRUE = return arrays, FALSE = return objects
+    function get_friends($user_id, $pending=0) // TRUE = return arrays, FALSE = return objects
     {
         switch ($pending) {
             case 0: // all confirmed friends
@@ -50,26 +50,30 @@ class User_model extends CI_Model {
                           ->get("friends");
         if ($query->num_rows() < 1)
             return FALSE;                                  
-        $friends_array = $query->result_array();
+        $friends_array = $query->result();
+
         $friends = array();
-        array_walk_recursive($friends_array, function($f) use (&$friends, $user_id) 
-                                            { if ($f != $user_id) $friends[] = $f; });
+        foreach ($friends_array as $friend)
+            if ($friend->user_id_1 != $user_id)
+                $friends[] = $friend->user_id_1;
+            else
+                $friends[] = $friend->user_id_2;
         $query = $this->db->where_in("user_id", $friends)
                           ->get("users");
-        if ($array)
-            return $query->result_array();
         return $query->result();       
     }
 
     function get_non_friends($user_id)
     {
         $friends = array($user_id); // array begins with current user, then add friends & requests
-        $friends_array = $this->get_friends($user_id, TRUE, 3);
-        if ($friends_array !== FALSE)
-            array_walk_recursive($friends_array, function($f) use (&$friends) 
-                                                { $friends[] = $f; });
-        $query = $this->db->where_not_in("user_id", $friends)
-                          ->get("users");
+        $friends_array = $this->get_friends($user_id, 3);
+        if ($friends_array !== FALSE):
+            foreach ($friends_array as $friend)
+                $friends[] = $friend->user_id;
+            $this->db->where_not_in("user_id", $friends);
+        endif;
+        $query = $this->db->get("users");
+        
         if ($query->num_rows() < 1)
             return FALSE;
         return $query->result();

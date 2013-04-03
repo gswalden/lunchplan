@@ -29,8 +29,8 @@ class Welcome extends CI_Controller {
 		$this->load->model("Event_model");
 		$data["user"] = $this->User_model->get_user($user_id);
 		$data["friends"] = $this->User_model->get_friends($user_id);		
-		$data["invites"] = $this->User_model->get_friends($user_id, FALSE, 1);
-		$data["requests"] = $this->User_model->get_friends($user_id, FALSE, 2);		
+		$data["invites"] = $this->User_model->get_friends($user_id, 1);
+		$data["requests"] = $this->User_model->get_friends($user_id, 2);		
 		$data["non_friends"] = $this->User_model->get_non_friends($user_id);
 		$data["input_first"] =	array(
 				              "name"        => "first_name",
@@ -70,11 +70,11 @@ class Welcome extends CI_Controller {
 				              "name"        => "event_submit");
 
 		$data["groups"] = $this->Group_model->get_groups($user_id);
-		$data["group_invites"] = $this->Group_model->get_groups($user_id, FALSE, 1);
+		$data["group_invites"] = $this->Group_model->get_groups($user_id, 1);
 		$data["non_groups"] = $this->Group_model->get_non_groups($user_id);
 		$data["events"] = $this->Event_model->get_events($user_id);
 		$data["friends_events"] = $this->Event_model->get_friends_events($user_id);
-		$data["event_invites"] = $this->Event_model->get_events($user_id, FALSE, 1);
+		$data["event_invites"] = $this->Event_model->get_events($user_id, 1);
 		$data["non_events"] = $this->Event_model->get_non_events($user_id);
 		$this->load->helper("form");
 		$this->load->view("header");

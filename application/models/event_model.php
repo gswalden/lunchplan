@@ -34,7 +34,7 @@ class Event_model extends CI_Model {
         $this->db->delete("event_groups", $data);
     }
 
-    function get_events($user_id, $array=FALSE, $pending = 0) // TRUE = return arrays, FALSE = return objects
+    function get_events($user_id, $pending = 0) // TRUE = return arrays, FALSE = return objects
     {
         if ($pending < 2) // 0 = get accepted events; 1 = get invites; 2 = get others
             $this->db->where("pending", $pending);
@@ -43,16 +43,15 @@ class Event_model extends CI_Model {
                           ->get("event_members");
         if ($query->num_rows() < 1)
             return FALSE;                                  
-        $events_array = $query->result_array();
+        $events_array = $query->result();
 
         $events = array();
-        array_walk_recursive($events_array, function($e) use (&$events) 
-                                            { $events[] = $e; });
+        foreach ($events_array as $event)
+            $events[] = $event->event_id;
+
         $query = $this->db->where_in("event_id", $events)
                           ->get("events");
         
-        if ($array)
-            return $query->result_array();
         return $query->result();       
     }
 
@@ -60,9 +59,10 @@ class Event_model extends CI_Model {
     {
         $this->load->model("User_model");
         $friends = $this->User_model->get_friends($user_id);
-        if ($friends !== FALSE)
-            foreach ($friends as $friend)
-                $friend_list[] = $friend->user_id;
+        if ($friends === FALSE)
+            return FALSE;
+        foreach ($friends as $friend)
+            $friend_list[] = $friend->user_id;
         unset($friends);
         $this->db->where_in("user_id", $friend_list);
         date_default_timezone_set("America/New_York");
@@ -75,12 +75,12 @@ class Event_model extends CI_Model {
 
     function get_non_events($user_id)
     {
-        $events_array = $this->get_events($user_id, TRUE, 2);
+        $events_array = $this->get_events($user_id, 2);
         
-        $events = array();
         if ($events_array !== FALSE):
-            array_walk_recursive($events_array, function($e) use (&$events) 
-                                                { $events[] = $e; });
+            $events = array();
+            foreach ($events_array as $event)
+                $events[] = $event->event_id;
             $this->db->where_not_in("event_id", $events);
         endif;
         $query = $this->db->get("events");
