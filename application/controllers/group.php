@@ -11,10 +11,8 @@ class Group extends CI_Controller {
 	{
 		$post = $this->input->post();
 		$user_id = $this->session->userdata("user_id"); // get current userid
-		unset($post["user_id"]);
 
 		$data["name"] = $post["group_name"];
-		unset($post["group_name"]);
 		$data["user_id"] = $user_id;
 
 		$this->load->model("Group_model");
@@ -25,7 +23,7 @@ class Group extends CI_Controller {
 					  "user_id"  => $user_id);
 		$this->Group_model->join($data);
 
-		unset($data);
+		unset($data, $post["user_id"], $post["group_name"], $post["group_submit"]);
 		$keys = array_keys($post);
 		foreach ($keys as $key)
 			if (strpos($key, "friend") !== FALSE)

@@ -16,6 +16,12 @@ class Event_model extends CI_Model {
     function add_group($data)
     {
         $this->db->insert("event_groups", $data);
+        $this->load->model("Group_model");
+        $group_members = $this->Group_model->get_group_members($data["group_id"]);
+        foreach ($group_members as $group_member)
+            $this->join(array("event_id" => $data["event_id"],
+                              "pending"  => 1,
+                              "user_id"  => $group_member->user_id));
     }
 
     function delete($data)

@@ -38,6 +38,14 @@ class Group_model extends CI_Model {
         return $query->result();       
     }
 
+    function get_group_members($group_id, $skip_current_user = TRUE)
+    {
+        if ($skip_current_user)
+            $this->db->where("user_id !=", $this->session->userdata("user_id"));
+        $this->db->where(array("group_id" => $group_id, "pending" => 0));
+        return $this->db->get("group_members")->result();
+    }
+
     function get_non_groups($user_id)
     {
         $groups_array = $this->get_groups($user_id, TRUE, 2);

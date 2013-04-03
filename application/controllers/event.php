@@ -45,7 +45,7 @@ class Event extends CI_Controller {
 				break;	
 		}
 		$data["end"]     = $datetime->format("Y-m-d H:i:s");
-		unset($datetime, $post["user_id"], $post["event_name"], $post["location"], $post["start"], $post["length"]);
+		unset($datetime, $post["user_id"], $post["event_name"], $post["location"], $post["start"], $post["length"], $post["event_submit"]);
 		$data["user_id"] = $user_id;		
 
 		$this->load->model("Event_model");
