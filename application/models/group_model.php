@@ -18,8 +18,10 @@ class Group_model extends CI_Model {
         $this->db->delete("groups", $data);
     }    
 
-    function get_groups($user_id, $array=FALSE) // TRUE = return arrays, FALSE = return objects
+    function get_groups($user_id, $array=FALSE, $pending = 0) // TRUE = return arrays, FALSE = return objects
     {
+        if ($pending < 2) // 0 = get groups; 1 = get group invites; 2 = get others
+            $this->db->where("pending", $pending);
         $query = $this->db->select("group_id")
                           ->where("user_id", $user_id)
                           ->get("group_members");
@@ -38,7 +40,7 @@ class Group_model extends CI_Model {
 
     function get_non_groups($user_id)
     {
-        $groups_array = $this->get_groups($user_id, TRUE);
+        $groups_array = $this->get_groups($user_id, TRUE, 2);
         $groups = array();
         if ($groups_array !== FALSE):
             array_walk_recursive($groups_array, function($g) use (&$groups) 
@@ -49,6 +51,18 @@ class Group_model extends CI_Model {
         if ($query->num_rows() < 1)
             return FALSE;
         return $query->result();        
+    }
+
+    function invite($data, $response)
+    {
+        if ($response):
+            $this->db->where($data);
+            $res["pending"] = 0;
+            $this->db->update("group_members", $res);
+        else:
+            $this->db->where($data);
+            $this->db->delete("group_members");
+        endif;    
     }
 
     function join($data)

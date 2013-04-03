@@ -17,11 +17,12 @@ class Event extends CI_Controller {
 
 	public function create() // create new event
 	{
-		$user_id = $this->session->userdata("user_id");	
-		$data["name"] = $this->input->post("event_name");
-		$data["location"]   = $this->input->post("location");
-		$datetime      		= new DateTime(NULL, new DateTimeZone("America/New_York"));
-		switch ($this->input->post("start")) {
+		$post             = $this->input->post();
+		$user_id          = $this->session->userdata("user_id");	
+		$data["name"]     = $post["event_name"];
+		$data["location"] = $post["location"];
+		$datetime         = new DateTime(NULL, new DateTimeZone("America/New_York"));
+		switch ($post["start"]) {
 			case "today":
 				break;
 			case "tomorrow":
@@ -32,7 +33,7 @@ class Event extends CI_Controller {
 				break;	
 		}
 		$data["start"] = $datetime->format("Y-m-d H:i:s");
-		switch ($this->input->post("length")) {
+		switch ($post["length"]) {
 			case "30min":
 				$datetime->add(new DateInterval("PT30M"));
 				break;
@@ -44,7 +45,7 @@ class Event extends CI_Controller {
 				break;	
 		}
 		$data["end"]     = $datetime->format("Y-m-d H:i:s");
-		unset($datetime);
+		unset($datetime, $post["user_id"], $post["event_name"], $post["location"], $post["start"], $post["length"]);
 		$data["user_id"] = $user_id;		
 
 		$this->load->model("Event_model");
@@ -56,27 +57,28 @@ class Event extends CI_Controller {
 		$this->Event_model->join($data);
 
 		unset($data);
+		$keys = array_keys($post);
+		foreach ($keys as $key)
+			if (strpos($key, "group") !== FALSE)
+				$valid_keys[] = $key;
 		$data["event_id"] = $event_id;
-		$i = 1;
-		$post_data = $this->input->post("group$i");
-		while ($post_data !== FALSE):
-			$data["group_id"] = $post_data;
+		foreach ($valid_keys as $valid_key):
+			$data["group_id"] = $post[$valid_key];
 			$this->Event_model->add_group($data);
-			$i++;
-			$post_data = $this->input->post("group$i");
-		endwhile;
+			unset($post[$valid_key]);
+		endforeach;
 		
-		unset($data, $i, $post_data);
+		unset($data, $keys, $key, $valid_keys, $valid_key);
+		$keys = array_keys($post);
+		foreach ($keys as $key)
+			if (strpos($key, "friend") !== FALSE)
+				$valid_keys[] = $key;
 		$data = array("event_id" => $event_id,
 					  "pending"  => 1);
-		$i = 1;
-		$post_data = $this->input->post("friend$i");
-		while ($post_data !== FALSE):
-			$data["user_id"] = $post_data;
+		foreach ($valid_keys as $valid_key):
+			$data["user_id"] = $post[$valid_key];
 			$this->Event_model->join($data);
-			$i++;
-			$post_data = $this->input->post("friend$i");
-		endwhile;
+		endforeach;
 
 		redirect("/");
 	}

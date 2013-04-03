@@ -52,6 +52,15 @@
 			foreach ($groups as $group)
 				echo $group->name . ' <a href="/lunchplan/index.php/group/leave/' . $group->group_id . '">leave</a><br />';
 	?>
+	List of Group Invites: <br />
+	<?php
+		if ($group_invites === FALSE)
+			echo "None <br />";
+		else 
+			foreach ($group_invites as $group_invite)
+				echo $group_invite->name . ' <a href="/lunchplan/index.php/group/invite/' . $group_invite->group_id . '/yes">accept</a>'
+					. ' <a href="/lunchplan/index.php/group/invite/' . $group_invite->group_id . '/no">reject</a><br />';
+	?>
 	List of Available Groups: <br />
 	<?php
 		if ($non_groups === FALSE)
@@ -65,6 +74,18 @@
 	<?php  
 		echo form_open("/group/create");
 		echo form_input($input_group_name);
+		echo "<br />";
+		echo "Invite friends:";
+		echo "<br />";
+		if ($friends === FALSE)
+			echo "None <br />";
+		else {
+			$i = 1;
+			foreach ($friends as $friend):
+				echo form_checkbox("friend$i", $friend->user_id, FALSE) . " " . $friend->first_name . "<br />";
+				$i++;
+			endforeach;
+		}
 		echo form_submit($group_submit, "Submit");
 		echo form_close();
 	?>

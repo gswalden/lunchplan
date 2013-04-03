@@ -6,16 +6,16 @@ class Cronbaby extends CI_Controller {
 
 	public function index()
 	{
-		$this->_optimize_db();
+		$this->optimize_db();
 		
 	}
 
-	private function _expired_invites()
+	public function expired_invites()
 	{
-			
+		
 	}
 
-	private function _optimize_db()
+	public function optimize_db()
 	{
 		$this->dbutil->optimize_database();
 	}
