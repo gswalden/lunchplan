@@ -45,18 +45,20 @@ class Event extends CI_Controller {
 				break;	
 		}
 		$data["end"]     = $datetime->format("Y-m-d H:i:s");
-		unset($datetime, $post["user_id"], $post["event_name"], $post["location"], $post["start"], $post["length"], $post["event_submit"]);
 		$data["user_id"] = $user_id;		
 
 		$this->load->model("Event_model");
 		$event_id = $this->Event_model->add($data);
 		
-		unset($data);
+		unset($data, $datetime, $post["user_id"], $post["event_name"], $post["location"], $post["start"], 
+			$post["length"], $post["event_submit"]);
+
 		$data = array("event_id" => $event_id,
 					  "user_id"  => $user_id);
 		$this->Event_model->join($data);
 
 		unset($data);
+
 		$keys = array_keys($post);
 		foreach ($keys as $key)
 			if (strpos($key, "group") !== FALSE)
@@ -69,6 +71,7 @@ class Event extends CI_Controller {
 		endforeach;
 		
 		unset($data, $keys, $key, $valid_keys, $valid_key);
+		
 		$keys = array_keys($post);
 		foreach ($keys as $key)
 			if (strpos($key, "friend") !== FALSE)

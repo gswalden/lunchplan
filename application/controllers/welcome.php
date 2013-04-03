@@ -73,6 +73,7 @@ class Welcome extends CI_Controller {
 		$data["group_invites"] = $this->Group_model->get_groups($user_id, FALSE, 1);
 		$data["non_groups"] = $this->Group_model->get_non_groups($user_id);
 		$data["events"] = $this->Event_model->get_events($user_id);
+		$data["friends_events"] = $this->Event_model->get_friends_events($user_id);
 		$data["event_invites"] = $this->Event_model->get_events($user_id, FALSE, 1);
 		$data["non_events"] = $this->Event_model->get_non_events($user_id);
 		$this->load->helper("form");

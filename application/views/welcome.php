@@ -1,40 +1,44 @@
 <body>
 	Hello <?php echo $user->first_name; ?><br />
-	List of Friends: <br />
-	<?php
-		if ($friends === FALSE)
-			echo "None <br />";
-		else 
-			foreach ($friends as $friend)
-				echo $friend->first_name . ' <a href="/lunchplan/index.php/user/delete_friend/' . $friend->user_id . '">delete</a>' 
-					. ' <a href="/lunchplan/index.php/' . $friend->user_id . '">be</a><br />';
-	?>
-	List of Requests: <br />
-	<?php
-		if ($invites === FALSE)
-			echo "None <br />";
-		else 
-			foreach ($invites as $invite)
-				echo $invite->first_name . ' <a href="/lunchplan/index.php/user/invite/' . $invite->user_id . '/yes">yes</a>'
-					. ' <a href="/lunchplan/index.php/user/invite/' . $invite->user_id . '/no">no</a><br />';
-	?>
-	List of Sent (Pending) Requests: <br />
-	<?php
-		if ($requests === FALSE)
-			echo "None <br />";
-		else 
-			foreach ($requests as $request)
-				echo $request->first_name . ' <a href="/lunchplan/index.php/' . $request->user_id . '">be</a><br />';
-	?>
-	List of Non-Friends: <br />
-	<?php
-		if ($non_friends === FALSE)
-			echo "None <br />";
-		else
-			foreach ($non_friends as $non_friend)
-				echo $non_friend->first_name . ' <a href="/lunchplan/index.php/user/add_friend/' . $non_friend->user_id . '">add</a>'
-					. ' <a href="/lunchplan/index.php/' . $non_friend->user_id . '">be</a><br />';
-	?>
+	<table>
+		<tr>
+			<td>List of Friends: <br />
+			<?php
+				if ($friends === FALSE)
+					echo "None <br />";
+				else 
+					foreach ($friends as $friend)
+						echo $friend->first_name . ' <a href="/lunchplan/index.php/user/delete_friend/' . $friend->user_id . '">delete</a>' 
+							. ' <a href="/lunchplan/index.php/' . $friend->user_id . '">be</a><br />';
+			?></td>
+			<td>List of Requests: <br />
+			<?php
+				if ($invites === FALSE)
+					echo "None <br />";
+				else 
+					foreach ($invites as $invite)
+						echo $invite->first_name . ' <a href="/lunchplan/index.php/user/invite/' . $invite->user_id . '/yes">yes</a>'
+							. ' <a href="/lunchplan/index.php/user/invite/' . $invite->user_id . '/no">no</a><br />';
+			?></td>
+			<td>List of Sent (Pending) Requests: <br />
+			<?php
+				if ($requests === FALSE)
+					echo "None <br />";
+				else 
+					foreach ($requests as $request)
+						echo $request->first_name . ' <a href="/lunchplan/index.php/' . $request->user_id . '">be</a><br />';
+			?></td>
+			<td>List of Non-Friends: <br />
+			<?php
+				if ($non_friends === FALSE)
+					echo "None <br />";
+				else
+					foreach ($non_friends as $non_friend)
+						echo $non_friend->first_name . ' <a href="/lunchplan/index.php/user/add_friend/' . $non_friend->user_id . '">add</a>'
+							. ' <a href="/lunchplan/index.php/' . $non_friend->user_id . '">be</a><br />';
+			?></td>
+		</tr>
+	</table>
 	<br />
 	<br />
 	<?php  
@@ -100,6 +104,16 @@
 				echo $event->name . ' <a href="/lunchplan/index.php/event/leave/' . $event->event_id . '">leave</a>';
 				if ($event->user_id == $user->user_id)
 					echo ' <a href="/lunchplan/index.php/event/delete/' . $event->event_id . '">delete</a>';
+				echo "<br />";
+			endforeach;
+	?>
+	List of Friends' Upcoming Events: <br />
+	<?php
+		if ($friends_events === FALSE)
+			echo "None <br />";
+		else 
+			foreach ($friends_events as $friends_event):
+				echo $friends_event->name . ' <a href="/lunchplan/index.php/event/leave/' . $friends_event->event_id . '">leave</a>';
 				echo "<br />";
 			endforeach;
 	?>

@@ -56,6 +56,23 @@ class Event_model extends CI_Model {
         return $query->result();       
     }
 
+    function get_friends_events($user_id)
+    {
+        $this->load->model("User_model");
+        $friends = $this->User_model->get_friends($user_id);
+        if ($friends !== FALSE)
+            foreach ($friends as $friend)
+                $friend_list[] = $friend->user_id;
+        unset($friends);
+        $this->db->where_in("user_id", $friend_list);
+        date_default_timezone_set("America/New_York");
+        $this->db->where("end >", date("Y-m-d H:i:s"));
+        $query = $this->db->get("events");
+        if ($query->num_rows() < 1)
+            return FALSE;
+        return $query->result();
+    }
+
     function get_non_events($user_id)
     {
         $events_array = $this->get_events($user_id, TRUE, 2);
