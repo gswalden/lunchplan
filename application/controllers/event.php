@@ -97,6 +97,21 @@ class Event extends CI_Controller {
 		$this->Event_model->delete_group($data);
 	}
 
+	public function invite($event_id, $response) // add current user to event
+	{
+		$data["user_id"] = $this->session->userdata("user_id"); // get current userid
+		$data["event_id"] = $event_id;
+		if ($response == "yes")
+			$response = TRUE;
+		else
+			$response = FALSE;
+
+		$this->load->model("Event_model");
+		$this->Event_model->invite($data, $response);
+
+		redirect("/");
+	}
+
 	public function join($event_id) // add current user to event
 	{
 		$data["user_id"] = $this->session->userdata("user_id"); // Get current user_id

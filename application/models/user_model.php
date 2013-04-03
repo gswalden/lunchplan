@@ -29,11 +29,24 @@ class User_model extends CI_Model {
         $this->db->delete("friends"); // $data should contain both ids
     }
 
-    function get_friends($user_id, $array=FALSE) // TRUE = return arrays, FALSE = return objects
+    function get_friends($user_id, $array=FALSE, $pending=0) // TRUE = return arrays, FALSE = return objects
     {
+        switch ($pending) {
+            case 0: // all confirmed friends
+                $sql = "pending = '$pending' AND (user_id_1 = '$user_id' OR user_id_2 = '$user_id')";
+                break;
+            case 1: // requested friends, if current user received request
+                $sql = "(user_id_1 = '$user_id' AND pending = '1') OR (user_id_2 = '$user_id' AND pending = '2')";
+                break;
+            case 2: // pending requests from current user
+                $sql = "(user_id_1 = '$user_id' AND pending = '2') OR (user_id_2 = '$user_id' AND pending = '1')";
+                break;
+            default: // all others (not friends, not requested)
+                $sql = "user_id_1 = '$user_id' OR user_id_2 = '$user_id'";
+                break;
+        }
         $query = $this->db->select("user_id_1, user_id_2")
-                          ->where("user_id_1", $user_id)
-                          ->or_where("user_id_2", $user_id)
+                          ->where($sql)
                           ->get("friends");
         if ($query->num_rows() < 1)
             return FALSE;                                  
@@ -50,8 +63,8 @@ class User_model extends CI_Model {
 
     function get_non_friends($user_id)
     {
-        $friends_array = $this->get_friends($user_id, TRUE);
-        $friends = array($user_id); // array begins with current user, then add friends
+        $friends = array($user_id); // array begins with current user, then add friends & requests
+        $friends_array = $this->get_friends($user_id, TRUE, 3);
         if ($friends_array !== FALSE)
             array_walk_recursive($friends_array, function($f) use (&$friends) 
                                                 { $friends[] = $f; });
@@ -65,6 +78,18 @@ class User_model extends CI_Model {
     function get_user($user_id)
     {
         return $this->db->get_where("users", array("user_id" => $user_id))->row();        
+    }
+
+    function invite($data, $response)
+    {
+        if ($response):
+            $this->db->where($data);
+            $res["pending"] = 0;
+            $this->db->update("friends", $res);
+        else:
+            $this->db->where($data);
+            $this->db->delete("friends");
+        endif;    
     }
 
     function update($data, $id) // Update user

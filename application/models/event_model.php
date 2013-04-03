@@ -28,8 +28,10 @@ class Event_model extends CI_Model {
         $this->db->delete("event_groups", $data);
     }
 
-    function get_events($user_id, $array=FALSE) // TRUE = return arrays, FALSE = return objects
+    function get_events($user_id, $array=FALSE, $pending = 0) // TRUE = return arrays, FALSE = return objects
     {
+        if ($pending < 2) // 0 = get accepted events; 1 = get invites; 2 = get others
+            $this->db->where("pending", $pending);
         $query = $this->db->select("event_id")
                           ->where("user_id", $user_id)
                           ->get("event_members");
@@ -50,7 +52,7 @@ class Event_model extends CI_Model {
 
     function get_non_events($user_id)
     {
-        $events_array = $this->get_events($user_id, TRUE);
+        $events_array = $this->get_events($user_id, TRUE, 2);
         
         $events = array();
         if ($events_array !== FALSE):
@@ -63,6 +65,18 @@ class Event_model extends CI_Model {
         if ($query->num_rows() < 1)
             return FALSE;
         return $query->result();        
+    }
+
+    function invite($data, $response)
+    {
+        if ($response):
+            $this->db->where($data);
+            $res["pending"] = 0;
+            $this->db->update("event_members", $res);
+        else:
+            $this->db->where($data);
+            $this->db->delete("event_members");
+        endif;    
     }
 
     function join($data)

@@ -40,6 +40,7 @@
 
 $route["default_controller"] = "welcome";
 $route["404_override"] = "";
+$route["(:num)"] = "welcome/index/$1";
 $route["grabseat"] = "join";
 $route["maketable"] = "create";
 

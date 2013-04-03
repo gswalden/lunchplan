@@ -17,15 +17,20 @@ class Welcome extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index()
+	public function index($user=NULL)
 	{
-		$this->session->set_userdata("user_id", "111"); // temporary for dev
+		if ($user !== NULL)
+			$this->session->set_userdata("user_id", $user); // temporary for dev
+		elseif ( ! $this->session->userdata("user_id"))
+			$this->session->set_userdata("user_id", 111); // temporary for dev
 		$user_id = $this->session->userdata("user_id");
 		$this->load->model("User_model");
 		$this->load->model("Group_model");
 		$this->load->model("Event_model");
 		$data["user"] = $this->User_model->get_user($user_id);
-		$data["friends"] = $this->User_model->get_friends($user_id);
+		$data["friends"] = $this->User_model->get_friends($user_id);		
+		$data["invites"] = $this->User_model->get_friends($user_id, FALSE, 1);
+		$data["requests"] = $this->User_model->get_friends($user_id, FALSE, 2);		
 		$data["non_friends"] = $this->User_model->get_non_friends($user_id);
 		$data["input_first"] =	array(
 				              "name"        => "first_name",
@@ -67,6 +72,7 @@ class Welcome extends CI_Controller {
 		$data["groups"] = $this->Group_model->get_groups($user_id);
 		$data["non_groups"] = $this->Group_model->get_non_groups($user_id);
 		$data["events"] = $this->Event_model->get_events($user_id);
+		$data["event_invites"] = $this->Event_model->get_events($user_id, FALSE, 1);
 		$data["non_events"] = $this->Event_model->get_non_events($user_id);
 		$this->load->helper("form");
 		$this->load->view("header");
