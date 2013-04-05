@@ -1,5 +1,5 @@
 <body>
-	Hello <?php echo $user->first_name; ?>, it is currently <?php echo DateTime::createFromFormat("Y-m-d H:i:s", time()) ?><br />
+	Hello <?php echo $user->first_name; ?><br />
 	<table>
 		<tr>
 			<td>List of Friends: <br />
