@@ -7,6 +7,7 @@ class Cronbaby extends CI_Controller {
 	public function index()
 	{
 		$this->optimize_db();
+		$this->expired_events();
 		
 	}
 
@@ -21,7 +22,7 @@ class Cronbaby extends CI_Controller {
 			$this->db->where_in("event_id", $event_ids);
 			$this->db->delete("events");
 		endif;
-//		$this->expired_invites($event_ids);
+		$this->expired_invites($event_ids);
 	}
 
 	public function expired_invites($ids = FALSE)
