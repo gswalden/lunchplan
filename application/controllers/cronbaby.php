@@ -1,4 +1,4 @@
-<?php if ( ! defined("BASEPATH")) exit("No direct script access allowed");
+<?php
 
 if ( ! CRON) exit("Only accessible via cron jobs.");
 
