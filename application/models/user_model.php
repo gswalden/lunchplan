@@ -58,9 +58,10 @@ class User_model extends CI_Model {
                 $friends[] = $friend->user_id_1;
             else
                 $friends[] = $friend->user_id_2;
-        $query = $this->db->where_in("user_id", $friends)
-                          ->get("users");
-        return $query->result();       
+
+        return $this->db->where_in("user_id", $friends)
+                        ->get("users")
+                        ->result();       
     }
 
     function get_non_friends($user_id)
