@@ -1,28 +1,33 @@
 <?php
-
-if ( ! CRON) exit("Only accessible via cron jobs.");
+// Disable for development
+//if ( ! CRON) exit("Only accessible via cron jobs.");
 
 class Cronbaby extends CI_Controller {
 
 	public function index()
 	{
-		$this->optimize_db();
-		$this->expired_events();
 		
+		$this->expired_events();
+		$this->optimize_db();
+
+		redirect("/");
 	}
 
 	public function expired_events()
 	{
-		$query = $this->db->get_where("events", array("end <", date("Y-m-d H:i:s")));
-		if ($query->num_row() > 0):
+		$query = $this->db->get_where("events", array("end <" => date("Y-m-d H:i:s")));
+		if ($query->num_rows() > 0):
 			$events = $query->result_array();
+			$this->db->trans_start();
 			$this->db->insert_batch("events_old", $events);
 			foreach ($events as $event)
 				$event_ids[] = $event["event_id"];
 			$this->db->where_in("event_id", $event_ids);
 			$this->db->delete("events");
+			$this->db->trans_complete();
 		endif;
-		$this->expired_invites($event_ids);
+		// Handled by InnoDB foreign key relation
+		//$this->expired_invites($event_ids);
 	}
 
 	public function expired_invites($ids = FALSE)
@@ -46,6 +51,7 @@ class Cronbaby extends CI_Controller {
 
 	public function optimize_db()
 	{
+		$this->load->dbutil();
 		$this->dbutil->optimize_database();
 	}
 
