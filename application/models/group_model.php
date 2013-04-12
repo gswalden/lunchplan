@@ -2,23 +2,23 @@
 
 class Group_model extends CI_Model {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
     }
 
-    function add($data)
+    public function add($data)
     {
     	$this->db->insert("groups", $data);
         return $this->db->insert_id();
     }
 
-    function delete($data)
+    public function delete($data)
     {
         $this->db->delete("groups", $data);
     }    
 
-    function get_groups($user_id, $pending = 0) // TRUE = return arrays, FALSE = return objects
+    public function get_groups($user_id, $pending = 0) // TRUE = return arrays, FALSE = return objects
     {
         if ($pending < 2) // 0 = get groups; 1 = get group invites; 2 = get others
             $this->db->where("pending", $pending);
@@ -38,7 +38,7 @@ class Group_model extends CI_Model {
         return $query->result();       
     }
 
-    function get_group_members($group_id, $skip_current_user = TRUE)
+    public function get_group_members($group_id, $skip_current_user = TRUE)
     {
         if ($skip_current_user)
             $this->db->where("user_id !=", $this->session->userdata("user_id"));
@@ -46,7 +46,7 @@ class Group_model extends CI_Model {
         return $this->db->get("group_members")->result();
     }
 
-    function get_non_groups($user_id)
+    public function get_non_groups($user_id)
     {
         $groups_array = $this->get_groups($user_id, 2);
         if ($groups_array !== FALSE):
@@ -61,7 +61,7 @@ class Group_model extends CI_Model {
         return $query->result();        
     }
 
-    function invite($data, $response)
+    public function invite($data, $response)
     {
         if ($response):
             $this->db->where($data);
@@ -73,17 +73,17 @@ class Group_model extends CI_Model {
         endif;    
     }
 
-    function join($data)
+    public function join($data)
     {
     	$this->db->insert("group_members", $data);
     }
 
-    function leave($data)
+    public function leave($data)
     {
         $this->db->delete("group_members", $data);
     }
     
-    function update($data, $id)
+    public function update($data, $id)
     {
         $this->db->where("id", $id);
         $this->db->update("groups", $data);

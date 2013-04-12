@@ -2,34 +2,34 @@
 
 class User_model extends CI_Model {
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
     }
 
-    function add($data)  // Create new user
+    public function add($data)  // Create new user
     {
         $this->db->insert("users", $data);
         return $this->db->insert_id();
     }
 
-    function add_friend($data) // Create friendship
+    public function add_friend($data) // Create friendship
     {
         $this->db->insert("friends", $data);
     }
     
-    function delete($data) // Delete user
+    public function delete($data) // Delete user
     {
         $this->db->delete("users", $data);
     }
 
-    function delete_friend($data) // Deletes a friendship
+    public function delete_friend($data) // Deletes a friendship
     {
         $this->db->where($data);
         $this->db->delete("friends"); // $data should contain both ids
     }
 
-    function get_friends($user_id, $pending=0) // TRUE = return arrays, FALSE = return objects
+    public function get_friends($user_id, $pending=0) // TRUE = return arrays, FALSE = return objects
     {
         switch ($pending) {
             case 0: // all confirmed friends
@@ -64,7 +64,7 @@ class User_model extends CI_Model {
                         ->result();       
     }
 
-    function get_non_friends($user_id)
+    public function get_non_friends($user_id)
     {
         $friends = array($user_id); // array begins with current user, then add friends & requests
         $friends_array = $this->get_friends($user_id, 3);
@@ -80,12 +80,12 @@ class User_model extends CI_Model {
         return $query->result();
     }
 
-    function get_user($user_id)
+    public function get_user($user_id)
     {
         return $this->db->get_where("users", array("user_id" => $user_id))->row();        
     }
 
-    function invite($data, $response)
+    public function invite($data, $response)
     {
         if ($response):
             $this->db->where($data);
@@ -97,7 +97,7 @@ class User_model extends CI_Model {
         endif;    
     }
 
-    function update($data, $id) // Update user
+    public function update($data, $id) // Update user
     {
         $this->db->where("id", $id);
         $this->db->update("users", $data);
