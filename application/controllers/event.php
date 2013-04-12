@@ -17,71 +17,10 @@ class Event extends CI_Controller {
 
 	public function create() // create new event
 	{
-		$post             = $this->input->post();
-		$user_id          = $this->session->userdata("user_id");	
-		$data["name"]     = $post["event_name"];
-		$data["location"] = $post["location"];
-		$datetime         = new DateTime(NULL, new DateTimeZone("America/New_York"));
-		switch ($post["start"]) {
-			case "today":
-				break;
-			case "tomorrow":
-				$datetime->add(new DateInterval("P1D"));
-				break;
-			case "overmorrow":
-				$datetime->add(new DateInterval("P2D"));
-				break;	
-		}
-		$data["start"] = $datetime->format("Y-m-d H:i:s");
-		switch ($post["length"]) {
-			case "30min":
-				$datetime->add(new DateInterval("PT30M"));
-				break;
-			case "1hr":
-				$datetime->add(new DateInterval("PT1H"));
-				break;
-			case "2hr":
-				$datetime->add(new DateInterval("PT2H"));
-				break;	
-		}
-		$data["end"]     = $datetime->format("Y-m-d H:i:s");
-		$data["user_id"] = $user_id;		
-
-		$this->load->model("Event_model");
-		$event_id = $this->Event_model->add($data);
-		
-		unset($data, $datetime, $post["user_id"], $post["event_name"], $post["location"], $post["start"], 
-			$post["length"], $post["event_submit"]);
-
-		$data = array("event_id" => $event_id,
-					  "user_id"  => $user_id);
-		$this->Event_model->join($data);
-
-		unset($data);
-
-		$keys = array_keys($post);
-		foreach ($keys as $key)
-			if (strpos($key, "group") !== FALSE)
-				$valid_keys[] = $key;
-		$data["event_id"] = $event_id;
-		foreach ($valid_keys as $valid_key):
-			$data["group_id"] = $post[$valid_key];
-			$this->Event_model->add_group($data);
-			unset($post[$valid_key]);
-		endforeach;
-		
-		unset($data, $keys, $key, $valid_keys, $valid_key);
-		
-		$keys = array_keys($post);
-		foreach ($keys as $key)
-			if (strpos($key, "friend") !== FALSE)
-				$valid_keys[] = $key;
-		$data = array("event_id" => $event_id,
-					  "pending"  => 1);
-		foreach ($valid_keys as $valid_key):
-			$data["user_id"] = $post[$valid_key];
-			$this->Event_model->join($data);
-		endforeach;
+		$post = $this->input->post();
+		$post["user_id"] = $this->session->userdata("user_id");
+		$this->load->library("Eventclass");
+		$this->Eventclass->create($post);
 
 		redirect("/");
 	}

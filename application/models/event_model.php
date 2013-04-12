@@ -16,12 +16,17 @@ class Event_model extends CI_Model {
     public function add_group($data)
     {
         $this->db->insert("event_groups", $data);
-        $this->load->model("Group_model");
+        /*$this->load->model("Group_model");
         $group_members = $this->Group_model->get_group_members($data["group_id"]);
-        foreach ($group_members as $group_member)
+        unset($group_members[array_search($data["user_id"], $group_members)]); // exclude creator (already added)
+        foreach ($group_members as $group_member):
             $this->join(array("event_id" => $data["event_id"],
                               "pending"  => 1,
                               "user_id"  => $group_member->user_id));
+            $users_added[] = $group_member->user_id;
+        endforeach;
+
+        return $users_added;*/ 
     }
 
     public function delete($data)
@@ -34,9 +39,9 @@ class Event_model extends CI_Model {
         $this->db->delete("event_groups", $data);
     }
 
-    public function get_event()
+    public function get_event($event_id)
     {
-        return $this->db->get_where("events", array("event_id" => $event_id))->result();
+        return $this->db->get_where("events", array("event_id" => $event_id))->row();
     }
     
     public function get_events($user_id, $pending = 0)

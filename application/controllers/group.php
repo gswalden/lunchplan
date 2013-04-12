@@ -10,30 +10,9 @@ class Group extends CI_Controller {
 	public function create() // create new group
 	{
 		$post = $this->input->post();
-		$user_id = $this->session->userdata("user_id"); // get current userid
-
-		$data["name"] = $post["group_name"];
-		$data["user_id"] = $user_id;
-
-		$this->load->model("Group_model");
-		$group_id = $this->Group_model->add($data);
-
-		unset($data);
-		$data = array("group_id" => $group_id,
-					  "user_id"  => $user_id);
-		$this->Group_model->join($data);
-
-		unset($data, $post["user_id"], $post["group_name"], $post["group_submit"]);
-		$keys = array_keys($post);
-		foreach ($keys as $key)
-			if (strpos($key, "friend") !== FALSE)
-				$valid_keys[] = $key;
-		$data = array("group_id" => $group_id,
-					  "pending"  => 1);
-		foreach ($valid_keys as $valid_key):
-			$data["user_id"] = $post[$valid_key];
-			$this->Group_model->join($data);
-		endforeach;
+		$post["user_id"] = $this->session->userdata("user_id"); // get current userid
+		$this->load->library("Groupclass");
+		$this->Groupclass->create($post);
 
 		redirect("/");
 	}
@@ -50,15 +29,10 @@ class Group extends CI_Controller {
 
 	public function invite($group_id, $response) // add current user to event
 	{
-		$data["user_id"] = $this->session->userdata("user_id"); // get current userid
-		$data["group_id"] = $group_id;
-		if ($response == "yes")
-			$response = TRUE;
-		else
-			$response = FALSE;
+		$user_id = $this->session->userdata("user_id"); // get current userid
 
-		$this->load->model("Group_model");
-		$this->Group_model->invite($data, $response);
+		$this->load->library("Groupclass");
+		$this->Groupclass->invite($group_id, $user_id, $response);
 
 		redirect("/");
 	}

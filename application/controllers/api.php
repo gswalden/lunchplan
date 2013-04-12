@@ -4,33 +4,6 @@ require_once APPPATH . "libraries/REST_Controller.php";
 
 class API extends REST_Controller {
 
-	public function events_get()
-	{
-		$event_id = $this->get("id");
-		if ( ! $event_id)
-			$this->response(NULL, 400);
-		$this->load->model("Event_model");
-
-		$type = $this->get("type");
-		switch ($type) {
-			case "my":
-				$data = $this->Event_model->get_my_events($user_id);
-				break;
-			case "invites":
-				$data = $this->Event_model->get_events($user_id, 1);
-				break;
-			case "friends":
-				$data = $this->Event_model->get_friends_events($user_id);
-				break;	
-			case "all":
-			default:
-				$data = $this->Event_model->get_events($user_id);
-				break;
-		}
-				
-		$this->_send_response($data);
-	}
-
 	public function event_get()
 	{
 		$event_id = $this->get("id");
@@ -39,8 +12,15 @@ class API extends REST_Controller {
 
 		$this->load->model("Event_model");
 		$data = $this->Event_model->get_event($event_id);
-		
+
 		$this->_send_response($data);
+	}
+
+	public function event_post()
+	{
+		$post = $this->post();
+		$this->load->library("Eventclass");
+		$this->Eventclass->create($post);
 	}
 
 	public function events_get()
@@ -79,6 +59,18 @@ class API extends REST_Controller {
 		$data = $this->User_model->get_friends($user_id);
 		
 		$this->_send_response($data);
+	}
+
+	public function group_post()
+	{
+		$post = $this->post();
+
+		$group_id = $post["group_id"];
+		$user_id = $post["user_id"];
+		$response = $post["response"];
+
+		$this->load->library("Groupclass");
+		$this->Groupclass->invite($group_id, $user_id, $response);
 	}
 
 	public function respond_friendship_post()
